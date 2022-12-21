@@ -97,7 +97,7 @@ class DataGenerator:
         return ones, X_mu_est, X_Sigma_est, (X_train, Y_train, X_test, Y_test)
 
     def process_real_data(self,seed=None,train_test_ratio=0.5):
-        df = pd.read_csv('./HIV.csv').dropna().to_numpy()
+        df = pd.read_csv('HIV.csv').dropna().to_numpy()
         set_seed(seed)
 
         X = df[:, 1:]

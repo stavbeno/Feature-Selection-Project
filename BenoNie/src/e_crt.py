@@ -154,8 +154,8 @@ class EcrtTester:
         # If you wish to use a different predictive model, please replace the Lasso model here.
         if self.offline:
             self.model = LassoCV(max_iter=10000, eps=5e-3).fit(X[:start_idx, :], y[:start_idx].ravel())
-        else:
-            self._initialize_online_lasso(X[:start_idx, :], y[:start_idx])
+        # else:
+        #     self._initialize_online_lasso(X[:start_idx, :], y[:start_idx])
         n = X.shape[0]
         # Run the sequential updates
         for new_points in np.arange(start_idx, n, 1):
@@ -175,10 +175,10 @@ class EcrtTester:
                         new_sampling_args = self.learn_conditional_distribution(X[:new_points, :])
                         self.sampling_args = {**self.sampling_args, **new_sampling_args}
                         # Train the model on the valid training data.
-                        if not self.offline:
-                            best_eta = lasso_cv_online_learning(X[:new_points, :], y[:new_points], self.models_dict,
-                                                                  val_prcg=0.2)
-                            self.model.alpha = best_eta
+                        # if not self.offline:
+                        #     best_eta = lasso_cv_online_learning(X[:new_points, :], y[:new_points], self.models_dict,
+                        #                                           val_prcg=0.2)
+                        #     self.model.alpha = best_eta
                         self.model.fit(X[:new_points, :], y[:new_points].ravel())
                     update = True
                     # Update the martingale using the new batch of samples.

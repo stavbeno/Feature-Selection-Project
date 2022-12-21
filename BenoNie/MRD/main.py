@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from sklearn.linear_model import LassoCV,RidgeCV,ElasticNetCV
+from sklearn.linear_model import LassoCV, ElasticNetCV
 import numpy as np
 
 import os
@@ -8,7 +8,7 @@ import sys
 import pandas as pd
 from utils import hrt_gauss,generate_conditional_data, set_seed,loss_f
 from LassoNN import LassoNN
-from data import DataGenerator
+from MRD.data.DataGenerator import DataGenerator
 
 from lasso_admm import lasso_admm
 from sklearn.preprocessing import StandardScaler
@@ -101,7 +101,7 @@ def experiment_NN(c,seed,is_linear=False, lr=5e-3, EPOCHS=60, is_est=False):
     # Set seed for reproducibility
     set_seed(seed)
 
-    data_gen = DataGenerator(n=800,p=100)
+    data_gen = DataGenerator(n=800, p=100)
     ones, X_mu, X_Sigma, (X_train, Y_train, X_test, Y_test) = data_gen.generate_AR1_data(c, rho=0.25, sparsity=0.3,
                                                                                          is_linear=is_linear, type='Poly',
                                                                                          train_test_ratio=0.5,
@@ -354,10 +354,10 @@ if __name__ == '__main__':
     
     date = '''TODO: fill in the date (str)'''
     # Parameters
-    c = float(sys.argv[1])
-    seed = int(sys.argv[2])
-    rho = float(sys.argv[3])
-    lmbda = float(sys.argv[4])
+    c = 1#float(sys.argv[1])
+    seed = 1#int(sys.argv[2])
+    rho = 1#float(sys.argv[3])
+    lmbda = 1#float(sys.argv[4])
     '''
     If you want to run it locally you can run -
     for c in [0.13,0.14,0.15,0.16,0.17,0.18]:

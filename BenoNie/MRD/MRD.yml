@@ -224,4 +224,3 @@ dependencies:
     - scs==2.1.2
     - toml==0.10.2
     - tqdm==4.59.0
-prefix:~/miniconda3/envs/MRD

@@ -24,7 +24,7 @@ def lasso_admm(X, y, X_mu, X_Sigma, alpha, T_coef, rho=1., rel_par=1., QUIET=Tru
     ftr_: is not None (int), then optimizing (MRD) for the specific given feature. 
     scaler: The scaler of the features. Should be in the form of Sklearn.
     lr: learning rate for the Pytorch mechanism.
-    EPOCHS: number of empochs for the Pytorch mechanism.
+    EPOCHS: number of epochs for the Pytorch mechanism.
     All others inputs are for the ADMM procedure.
     '''
     

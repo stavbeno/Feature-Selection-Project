@@ -27,7 +27,7 @@ def get_pcr_data(d=20, a=3, n=5000, test='power'):
 
 
 def get_hiv_data(n=1555):
-    df = pd.read_csv('../data/HIV.csv').dropna()
+    df = pd.read_csv('HIV.csv').dropna()
     features_names = df.columns[1:]
     n = min(n, df.shape[0])
     X = df.to_numpy()[:n, 1:]
