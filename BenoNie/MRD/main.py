@@ -354,10 +354,10 @@ if __name__ == '__main__':
     
     date = '''TODO: fill in the date (str)'''
     # Parameters
-    c = 1#float(sys.argv[1])
-    seed = 1#int(sys.argv[2])
-    rho = 1#float(sys.argv[3])
-    lmbda = 1#float(sys.argv[4])
+    c = 1 #float(sys.argv[1])
+    seed = 1 #int(sys.argv[2])
+    rho = 0.25 #float(sys.argv[3])
+    lmbda = 1 #float(sys.argv[4])
     '''
     If you want to run it locally you can run -
     for c in [0.13,0.14,0.15,0.16,0.17,0.18]:

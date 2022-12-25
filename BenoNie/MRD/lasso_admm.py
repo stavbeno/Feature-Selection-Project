@@ -5,8 +5,8 @@ import numpy as np
 import scipy.sparse as sparse
 from scipy.sparse.linalg import spsolve
 from numpy.linalg import norm, cholesky
-from LassoNN import LassoNN
-from utils import generate_conditional_data
+from MRD.LassoNN import LassoNN
+from MRD.utils import generate_conditional_data
 
 
 

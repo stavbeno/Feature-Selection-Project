@@ -6,6 +6,7 @@ from src.sampling_functions import get_data_statistics, sample_from_gaussian
 from warnings import simplefilter
 from sklearn.exceptions import ConvergenceWarning
 from src.utils import BettingFunction, TestStatistic, default, lasso_cv_online_learning
+from MRD.lasso_admm import lasso_admm
 simplefilter("ignore", category=ConvergenceWarning)
 
 
@@ -135,6 +136,15 @@ class EcrtTester:
         St = np.mean(St_v)  # integral with uniform density.
         return St, St_v
 
+
+    def BenoNie(self, X, y, end_idx):
+        X_mu = np.mean(X[:end_idx, :], 0)
+        X_Sigma = np.cov(X[:end_idx, :].T)
+        self.model = LassoCV(fit_intercept=False).fit(X[:end_idx, :], y[:end_idx].ravel())
+        alpha = self.model.alpha_
+        admm_coef, _ = lasso_admm(X, y, X_mu, X_Sigma, alpha, T_coef=0.5)
+        self.model.coef_ = admm_coef
+
     def run(self, X, y, start_idx=None, alpha=0.05):
         """
         :param X: The data matrix with size (n, d).
@@ -147,13 +157,14 @@ class EcrtTester:
         :param alpha: The target level. The null will be rejected when the martingale will reach 1/alpha.
         :return: Whether the null is rejected or not, i.e., whether the tested feature is important or not.
         """
+
         rejected = False
         if start_idx is None:
             start_idx = self.n_init
         # Train the model on the available data points, that are not used for the martingales update.
         # If you wish to use a different predictive model, please replace the Lasso model here.
         if self.offline:
-            self.model = LassoCV(max_iter=10000, eps=5e-3).fit(X[:start_idx, :], y[:start_idx].ravel())
+            self.BenoNie(X, y, start_idx)
         # else:
         #     self._initialize_online_lasso(X[:start_idx, :], y[:start_idx])
         n = X.shape[0]
@@ -179,7 +190,13 @@ class EcrtTester:
                         #     best_eta = lasso_cv_online_learning(X[:new_points, :], y[:new_points], self.models_dict,
                         #                                           val_prcg=0.2)
                         #     self.model.alpha = best_eta
-                        self.model.fit(X[:new_points, :], y[:new_points].ravel())
+                        # self.model.fit(X[:new_points, :], y[:new_points].ravel())
+
+                        # MRD FITTING
+                        self.BenoNie(X, y, new_points)
+                        # END MRD FITTING
+
+
                     update = True
                     # Update the martingale using the new batch of samples.
                     self.martingale_dict[b]["St"], self.martingale_dict[b]["St_v"] = self._update_martingale(
