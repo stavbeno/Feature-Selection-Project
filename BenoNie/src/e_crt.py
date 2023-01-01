@@ -6,6 +6,7 @@ from src.sampling_functions import get_data_statistics, sample_from_gaussian
 from warnings import simplefilter
 from sklearn.exceptions import ConvergenceWarning
 from src.utils import BettingFunction, TestStatistic, default, lasso_cv_online_learning
+
 from MRD.lasso_admm import lasso_admm
 simplefilter("ignore", category=ConvergenceWarning)
 
@@ -137,13 +138,14 @@ class EcrtTester:
         return St, St_v
 
 
-    def BenoNie(self, X, y, end_idx):
-        X_mu = np.mean(X[:end_idx, :], 0)
-        X_Sigma = np.cov(X[:end_idx, :].T)
+    def BenoNie(self, X, y, end_idx, X_mu, X_Sigma):
+        # X_mu = np.mean(X[:end_idx, :], 0)
+        # X_Sigma = np.cov(X[:end_idx, :].T)
         self.model = LassoCV(fit_intercept=False).fit(X[:end_idx, :], y[:end_idx].ravel())
         alpha = self.model.alpha_
-        admm_coef, _ = lasso_admm(X, y, X_mu, X_Sigma, alpha, T_coef=0.5)
+        admm_coef, _ = lasso_admm(X, y, X_mu, X_Sigma, alpha, T_coef=0.5, ftr_=0, EPOCHS=20)
         self.model.coef_ = admm_coef
+
 
     def run(self, X, y, start_idx=None, alpha=0.05):
         """
@@ -163,8 +165,10 @@ class EcrtTester:
             start_idx = self.n_init
         # Train the model on the available data points, that are not used for the martingales update.
         # If you wish to use a different predictive model, please replace the Lasso model here.
+        X_mu = np.mean(X, 0)
+        X_Sigma = np.cov(X.T)
         if self.offline:
-            self.BenoNie(X, y, start_idx)
+            self.BenoNie(X, y, start_idx, X_mu, X_Sigma)
         # else:
         #     self._initialize_online_lasso(X[:start_idx, :], y[:start_idx])
         n = X.shape[0]
@@ -193,10 +197,8 @@ class EcrtTester:
                         # self.model.fit(X[:new_points, :], y[:new_points].ravel())
 
                         # MRD FITTING
-                        self.BenoNie(X, y, new_points)
+                        self.BenoNie(X, y, new_points, X_mu, X_Sigma)
                         # END MRD FITTING
-
-
                     update = True
                     # Update the martingale using the new batch of samples.
                     self.martingale_dict[b]["St"], self.martingale_dict[b]["St_v"] = self._update_martingale(
