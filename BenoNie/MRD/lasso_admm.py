@@ -5,8 +5,14 @@ import numpy as np
 import scipy.sparse as sparse
 from scipy.sparse.linalg import spsolve
 from numpy.linalg import norm, cholesky
-from MRD.LassoNN import LassoNN
-from MRD.utils import generate_conditional_data
+import os
+import sys
+script_dir = os.path.dirname(os.path.abspath(__file__))
+mrd_idx = script_dir.find('/MRD')
+mrd_dir = script_dir[:mrd_idx]
+sys.path.append(mrd_dir + '/MRD')
+from LassoNN import LassoNN
+import utils_mrd
 
 
 
@@ -83,9 +89,9 @@ def lasso_admm(X, y, X_mu, X_Sigma, alpha, T_coef, rho=1., rel_par=1., QUIET=Tru
                 ftrs = np.random.permutation(range(p))[:int(.25 * p)] if ftr_ is None else [ftr_]
                 if T_coef != 0:
                     if scaler is not None:
-                        X_tilda_all = generate_conditional_data(scaler.inverse_transform(X), X_mu, X_Sigma, ftrs_=ftrs)
+                        X_tilda_all = utils_mrd.generate_conditional_data(scaler.inverse_transform(X), X_mu, X_Sigma, ftrs_=ftrs)
                     else:
-                        X_tilda_all = generate_conditional_data(X, X_mu, X_Sigma, ftrs_=ftrs)
+                        X_tilda_all = utils_mrd.generate_conditional_data(X, X_mu, X_Sigma, ftrs_=ftrs)
 
                 y_hat = model(torch.tensor(X).type(torch.FloatTensor))
                 z_tensor = torch.tensor(z.T).type(torch.FloatTensor)

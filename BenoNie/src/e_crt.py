@@ -2,17 +2,21 @@ import numpy as np
 import json
 import os
 from sklearn.linear_model import LassoCV, Lasso
-from src.sampling_functions import get_data_statistics, sample_from_gaussian
+from sampling_functions import get_data_statistics, sample_from_gaussian
 from warnings import simplefilter
 from sklearn.exceptions import ConvergenceWarning
-from src.utils import BettingFunction, TestStatistic, default, lasso_cv_online_learning
-
-from MRD.lasso_admm import lasso_admm
+from utils import BettingFunction, TestStatistic, default, lasso_cv_online_learning
+import sys
+script_dir = os.path.dirname(os.path.abspath(__file__))
+benonie_idx = script_dir.find('/src')
+benonie_dir = script_dir[:benonie_idx]
+sys.path.append(benonie_dir + '/MRD')
+from lasso_admm import lasso_admm
 simplefilter("ignore", category=ConvergenceWarning)
 
 
 class EcrtTester:
-    """
+    """   
     Conditional Testing with e-CRT
     """
 

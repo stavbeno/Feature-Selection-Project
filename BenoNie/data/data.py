@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 import pandas as pd
 from sklearn.linear_model import LogisticRegressionCV
-from data.fund_data_names import SECTORS
+from fund_data_names import SECTORS
 
 
 def get_pcr_data(d=20, a=3, n=5000, test='power'):
