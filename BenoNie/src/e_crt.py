@@ -147,8 +147,8 @@ class EcrtTester:
         # X_Sigma = np.cov(X[:end_idx, :].T)
         self.model = LassoCV(fit_intercept=False).fit(X[:end_idx, :], y[:end_idx].ravel())
         alpha = self.model.alpha_
-        admm_coef, _ = lasso_admm(X, y, X_mu, X_Sigma, alpha, T_coef=0.5, ftr_=0, EPOCHS=20)
-        self.model.coef_ = admm_coef
+        #admm_coef, _ = lasso_admm(X, y, X_mu, X_Sigma, alpha, T_coef=0.5, ftr_=0, EPOCHS=20)
+        #self.model.coef_ = admm_coef
 
 
     def run(self, X, y, start_idx=None, alpha=0.05):
